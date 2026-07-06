@@ -1,0 +1,948 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Manual do Monitor de Links</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Montserrat:wght@500;600;700;800&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --bg: #0f172a;
+      --card-bg: #1e293b;
+      --text: #f8fafc;
+      --text-muted: #94a3b8;
+      --primary: #3b82f6;
+      --accent: #6366f1;
+      --border: rgba(255, 255, 255, 0.06);
+      --c-excelente: #10b981;
+      --c-bom: #3b82f6;
+      --c-regular: #eab308;
+      --c-ruim: #ef4444;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: 'Inter', sans-serif;
+      background-color: var(--bg);
+      color: var(--text);
+      line-height: 1.6;
+      display: flex;
+      min-height: 100vh;
+      overflow-x: hidden;
+    }
+
+    /* Menu Lateral / Sidebar */
+    .sidebar {
+      width: 280px;
+      background: var(--card-bg);
+      border-right: 1px solid var(--border);
+      display: flex;
+      flex-direction: column;
+      position: fixed;
+      top: 0;
+      bottom: 0;
+      left: 0;
+      z-index: 100;
+      padding: 24px;
+    }
+
+    .logo-container {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 32px;
+      padding-bottom: 20px;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .logo-icon {
+      font-size: 1.8rem;
+    }
+
+    .logo-text {
+      font-family: 'Montserrat', sans-serif;
+      font-weight: 800;
+      font-size: 1.15rem;
+      color: var(--text);
+      letter-spacing: -0.5px;
+    }
+
+    .menu-list {
+      list-style: none;
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .menu-item {
+      padding: 12px 16px;
+      border-radius: 8px;
+      cursor: pointer;
+      color: var(--text-muted);
+      font-weight: 500;
+      transition: all 0.25s ease;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+    }
+
+    .menu-item:hover {
+      background: rgba(255, 255, 255, 0.03);
+      color: var(--text);
+    }
+
+    .menu-item.active {
+      background: rgba(59, 130, 246, 0.12);
+      color: var(--primary);
+      box-shadow: inset 3px 0 0 var(--primary);
+    }
+
+    /* Área Principal de Conteúdo */
+    .main-content {
+      margin-left: 280px;
+      flex: 1;
+      padding: 48px;
+      max-width: 1100px;
+    }
+
+    .tab-content {
+      display: none;
+      animation: fadeIn 0.4s ease-out forwards;
+    }
+
+    .tab-content.active {
+      display: block;
+    }
+
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(12px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    h1, h2, h3 {
+      font-family: 'Montserrat', sans-serif;
+      font-weight: 700;
+      margin-bottom: 16px;
+      color: #fff;
+    }
+
+    h1 {
+      font-size: 2.2rem;
+      letter-spacing: -0.5px;
+      margin-bottom: 24px;
+      border-bottom: 2px solid var(--border);
+      padding-bottom: 16px;
+    }
+
+    h2 {
+      font-size: 1.5rem;
+      margin-top: 32px;
+      border-bottom: 1px solid var(--border);
+      padding-bottom: 8px;
+    }
+
+    p {
+      color: var(--text-muted);
+      margin-bottom: 20px;
+      font-size: 1.05rem;
+    }
+
+    .card {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 24px;
+      margin-bottom: 24px;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+    }
+
+    .card-title {
+      font-size: 1.2rem;
+      font-weight: 700;
+      margin-bottom: 12px;
+      color: #fff;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    ul, ol {
+      margin-left: 20px;
+      margin-bottom: 20px;
+      color: var(--text-muted);
+    }
+
+    li {
+      margin-bottom: 8px;
+    }
+
+    .badge {
+      display: inline-block;
+      padding: 4px 10px;
+      border-radius: 6px;
+      font-size: 0.85rem;
+      font-weight: 600;
+      margin-right: 8px;
+    }
+
+    .badge-ex { background: var(--c-excelente); color: #000; }
+    .badge-bom { background: var(--c-bom); color: #fff; }
+    .badge-reg { background: var(--c-regular); color: #000; }
+    .badge-ruim { background: var(--c-ruim); color: #fff; }
+
+    /* Layout de duas colunas */
+    .feature-row {
+      display: flex;
+      gap: 32px;
+      margin-bottom: 48px;
+      align-items: flex-start;
+      border-bottom: 1px solid var(--border);
+      padding-bottom: 32px;
+    }
+    
+    .feature-row:last-child {
+      border-bottom: none;
+    }
+
+    .feature-preview {
+      flex: 1.2;
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      overflow: hidden;
+      box-shadow: 0 8px 24px rgba(0,0,0,0.2);
+    }
+
+    .feature-desc {
+      flex: 1.8;
+    }
+
+    .image-placeholder {
+      background: var(--card-bg);
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 0;
+      text-align: center;
+      position: relative;
+      overflow: hidden;
+      margin-bottom: 24px;
+    }
+
+    .image-placeholder img {
+      width: 100%;
+      height: auto;
+      max-width: 100%;
+      max-height: none;
+      border-radius: 8px;
+      display: block;
+    }
+
+    .image-placeholder[data-key="foto_botao"] {
+      max-width: 340px;
+      margin: 0 auto 24px auto;
+      border: 1px solid var(--border);
+    }
+
+    .image-placeholder .placeholder-text,
+    .image-placeholder .placeholder-icon {
+      display: none;
+    }
+
+    .placeholder-icon {
+      font-size: 2.5rem;
+      margin-bottom: 12px;
+      display: block;
+    }
+
+    .placeholder-text {
+      color: var(--text-muted);
+    }
+
+    /* Responsividade */
+    @media (max-width: 900px) {
+      .feature-row {
+        flex-direction: column;
+      }
+      .feature-preview {
+        width: 100%;
+      }
+    }
+
+    @media (max-width: 768px) {
+      body {
+        flex-direction: column;
+      }
+      .sidebar {
+        width: 100%;
+        position: relative;
+        border-right: none;
+        border-bottom: 1px solid var(--border);
+        padding: 16px;
+      }
+      .main-content {
+        margin-left: 0;
+        padding: 24px;
+      }
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Sidebar / Menu Lateral -->
+  <aside class="sidebar">
+    <div class="logo-container">
+      <span class="logo-icon">🌐</span>
+      <span class="logo-text">MONITOR DE LINKS</span>
+    </div>
+    <ul class="menu-list">
+      <li class="menu-item active" onclick="showTab('inicio')">🏠 Visão Geral</li>
+      <li class="menu-item" onclick="showTab('equipamento')">🔌 Equipamento</li>
+      <li class="menu-item" onclick="showTab('telegram')">🤖 Telegram</li>
+      <li class="menu-item" onclick="showTab('config')">⚙️ Configuração</li>
+      <li class="menu-item" onclick="showTab('criar-bot')">🤖 Criar Bot Telegram</li>
+      <li class="menu-item" onclick="showTab('roteamento')">🔀 Roteamento ER605</li>
+    </ul>
+  </aside>
+
+  <!-- Conteúdo Principal -->
+  <main class="main-content">
+
+    <!-- ABA: INÍCIO / VISÃO GERAL -->
+    <section id="tab-inicio" class="tab-content active">
+      <h1>Visão Geral do Sistema</h1>
+      <p>O <b>Monitor de Links</b> é um monitor de estabilidade de internet projetado para acompanhar o funcionamento dos seus links e equipamentos de rede em tempo real. Ele monitora a latência, a oscilação de sinal e a perda de pacotes de dados, alertando instantaneamente no Telegram se ocorrer alguma queda.</p>
+      
+      <h2>🖥️ Telas do Sistema</h2>
+      <p>O sistema do dispositivo conta com 3 interfaces principais acessíveis do seu computador ou celular. Veja a explicação de cada uma delas abaixo:</p>
+
+      <!-- TELA 1: PRINCIPAL -->
+      <h3>1. Tela Principal (Painel de Status)</h3>
+      <p>Exibe o estado operacional atual do dispositivo e as estatísticas do dia. Ela é dividida nos seguintes quadros:</p>
+
+      <!-- QUADRO: ÚLTIMO TESTE -->
+      <div class="feature-row">
+        <div class="feature-preview">
+          <img src="quadro_ultimo_teste.png" alt="Último Teste" style="width: 100%; display: block; border-radius: 8px;">
+        </div>
+        <div class="feature-desc">
+          <div class="card" style="margin-bottom:0;">
+            <div class="card-title">⏱️ Último Teste (Tempo Real)</div>
+            <p>Varredura instantânea de cada operadora ativa:</p>
+            <ul>
+              <li><b>PING (Atraso/Latência):</b> Tempo de resposta da conexão.
+                <br>🟢 Excelente: até 28ms | 🔵 Bom: até 35ms | 🟡 Regular: até 55ms | 🔴 Ruim: acima de 55ms
+              </li>
+              <li><b>JITTER (Instabilidade):</b> Variação de atraso. Quanto menor, mais estável é a sua internet.
+                <br>🟢 Excelente: até 4ms | 🔵 Bom: até 8ms | 🟡 Regular: até 15ms | 🔴 Ruim: acima de 15ms
+              </li>
+              <li><b>PERDA:</b> Porcentagem de falhas no envio de dados.
+                <br>🟢 Excelente: até 1% | 🟡 Regular: até 20% | 🔴 Ruim: acima de 20%
+              </li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <!-- QUADRO: HISTÓRICO RECENTE -->
+      <div class="feature-row">
+        <div class="feature-preview">
+          <img src="quadro_historico_recente.png" alt="Histórico Recente" style="width: 100%; display: block; border-radius: 8px;">
+        </div>
+        <div class="feature-desc">
+          <div class="card" style="margin-bottom:0;">
+            <div class="card-title">📊 Histórico Recente</div>
+            <p>Linha do tempo composta por 30 blocos que mostram a qualidade dos últimos 30 testes de conexão (a leitura é feita da esquerda para a direita, sendo o bloco mais à direita o teste mais recente).</p>
+            <p>Cada quadrado representa o estado geral da rede no momento:</p>
+            <div style="display:flex;flex-wrap:wrap;gap:8px;margin-top:8px;">
+              <span class="badge badge-ex">Ciano: Excelente</span>
+              <span class="badge badge-bom">Verde: Bom</span>
+              <span class="badge badge-reg">Amarelo: Regular</span>
+              <span class="badge badge-ruim">Vermelho: Ruim</span>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- QUADRO: HARDWARE INFO -->
+      <div class="feature-row">
+        <div class="feature-preview">
+          <img src="quadro_hardware_info.png" alt="Informações do Dispositivo" style="width: 100%; display: block; border-radius: 8px;">
+        </div>
+        <div class="feature-desc">
+          <div class="card" style="margin-bottom:0;">
+            <div class="card-title">🛠️ Informações do Equipamento</div>
+            <p>Quadro com o estado de saúde física e conectividade local do aparelho:</p>
+            <ul>
+              <li><b>Sinal Wi-Fi:</b> Qualidade de recepção do sinal de Wi-Fi local.
+                <br>🟢 Excelente: 100% a 80% (-30 a -50 dBm)
+                <br>🔵 Bom: 79% a 60% (-51 a -67 dBm)
+                <br>🟡 Regular: 59% a 30% (-68 a -79 dBm)
+                <br>🔴 Ruim: 29% a 10% (-80 a -89 dBm)
+              </li>
+              <li><b>Memória Inicial & Atual:</b> Indica a memória interna livre disponível para processamento, garantindo que o aparelho opere sem travamentos.</li>
+              <li><b>Temperatura:</b> Temperatura interna do aparelho (FRIO, NORMAL ou QUENTE).</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <!-- QUADRO: ESTATÍSTICAS HOJE -->
+      <div class="feature-row">
+        <div class="feature-preview">
+          <img src="quadro_estatisticas_hoje.png" alt="Estatísticas de Hoje" style="width: 100%; display: block; border-radius: 8px;">
+        </div>
+        <div class="feature-desc">
+          <div class="card" style="margin-bottom:0;">
+            <div class="card-title">📈 Estatísticas Acumuladas (Hoje)</div>
+            <p>Histórico geral acumulado desde o início do dia:</p>
+            <ul>
+              <li><b>Quedas & Tempo Offline:</b> Quantidade de quedas registradas e tempo total acumulado em que cada conexão ficou fora do ar hoje.</li>
+              <li><b>Uptime:</b> Porcentagem de tempo em que a conexão ficou online hoje.</li>
+              <li><b>Melhor/Pior Latência:</b> Os menores e maiores atrasos de sinal registrados, marcando a hora exata da ocorrência.</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <!-- QUADROS: CONTROLE & LOGS -->
+      <div class="feature-row">
+        <div class="feature-preview">
+          <img src="quadro_controle_logs.png" alt="Controle e Instabilidade" style="width: 100%; display: block; border-radius: 8px;">
+        </div>
+        <div class="feature-desc">
+          <div class="card" style="margin-bottom:0;">
+            <div class="card-title">🎮 Controle, Eventos & Integrações</div>
+            <ul>
+              <li><b>Registro de Instabilidade:</b> Histórico das falhas de conexão rápidas.</li>
+              <li><b>Eventos do Sistema:</b> Log interno do aparelho (sincronização de relógio, verificação de novas atualizações, etc.).</li>
+              <li><b>Painel de Controle:</b> Botões para testar agora, enviar resumo diário, pausar monitoramento, silenciar alertas do Telegram ou reiniciar o aparelho.</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <!-- TELA 2: CONFIGURAÇÕES -->
+      <h3 style="margin-top:40px;">2. Tela de Configurações (/config)</h3>
+      <p>Esta tela permite personalizar o comportamento do monitor de rede. Veja a explicação de cada quadro configurável:</p>
+
+      <!-- CONFIG 1: LINKS MONITORADOS -->
+      <div class="feature-row">
+        <div class="feature-preview">
+          <img src="quadro_config_links.png" alt="Configuração de Links" style="width: 100%; display: block; border-radius: 8px;">
+        </div>
+        <div class="feature-desc">
+          <div class="card" style="margin-bottom:0;">
+            <div class="card-title">📡 Links Monitorados (Conexões)</div>
+            <p>Configuração dos até 3 links que serão testados de forma paralela e independente:</p>
+            <ul>
+              <li><b>Nome do Link:</b> Nome amigável que aparecerá nos logs, tabelas e relatórios (ex: Vivo Fibra, Starlink).</li>
+              <li><b>IP de Ping:</b> O endereço público estável contra o qual os testes de ping serão realizados.</li>
+              <li><b>Link Ativo:</b> Chave liga/desliga para ativar ou desativar o monitoramento do link.</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <!-- CONFIG 2: WIFI -->
+      <div class="feature-row">
+        <div class="feature-preview">
+          <img src="quadro_config_wifi.png" alt="Rede Wi-Fi" style="width: 100%; display: block; border-radius: 8px;">
+        </div>
+        <div class="feature-desc">
+          <div class="card" style="margin-bottom:0;">
+            <div class="card-title">📶 Rede Wi-Fi</div>
+            <p>Definição do nome do sinal Wi-Fi (SSID) e a respectiva senha de segurança da internet local em que o monitor deve se conectar para realizar os testes.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- CONFIG 3: TELEGRAM & ADAFRUIT -->
+      <div class="feature-row">
+        <div class="feature-preview">
+          <img src="quadro_config_telegram_adafruit.png" alt="Telegram e Adafruit" style="width: 100%; display: block; border-radius: 8px;">
+        </div>
+        <div class="feature-desc">
+          <div class="card" style="margin-bottom:0;">
+            <div class="card-title">🤖 Telegram & Adafruit IO</div>
+            <ul>
+              <li><b>Telegram:</b> Campos para inserir o Token do Bot e o Chat ID cadastrado para o recebimento das mensagens de alerta no seu celular.</li>
+              <li><b>Adafruit IO:</b> Permite inserir o usuário, chave e feeds para exibir dados gráficos em tempo real em um painel externo se desejar.</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <!-- CONFIG 4: SINALIZAÇÃO FÍSICA -->
+      <div class="feature-row">
+        <div class="feature-preview">
+          <img src="quadro_config_sinalizacao.png" alt="Sinalização Física" style="width: 100%; display: block; border-radius: 8px;">
+        </div>
+        <div class="feature-desc">
+          <div class="card" style="margin-bottom:0;">
+            <div class="card-title">💡 Sinalização Física (Luz e Som)</div>
+            <p>Defina as preferências visuais e sonoras diretamente na memória do aparelho:</p>
+            <ul>
+              <li><b>Ativar Luz de Status:</b> Liga ou desliga as piscadas da luz azul de rede.</li>
+              <li><b>Ativar Alertas de Áudio:</b> Liga ou desliga os bipes sonoros de alerta (eles são silenciados automaticamente no horário noturno configurado das 22h às 08h).</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <!-- CONFIG 5: EQUIPAMENTOS -->
+      <div class="feature-row">
+        <div class="feature-preview">
+          <img src="quadro_config_equipamentos.png" alt="Equipamentos a Monitorar" style="width: 100%; display: block; border-radius: 8px;">
+        </div>
+        <div class="feature-desc">
+          <div class="card" style="margin-bottom:0;">
+            <div class="card-title">🚨 Equipamentos a Monitorar (Rede Local)</div>
+            <p>Lista dinâmica para cadastrar IPs de dispositivos locais importantes (como impressoras, servidores ou computadores). Se eles ficarem fora do ar, o monitor enviará um aviso no Telegram.</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- CONFIG 6: BACKUP & RESET -->
+      <div class="feature-row">
+        <div class="feature-preview">
+          <img src="quadro_config_backup_reset.png" alt="Backup e Reset de Fábrica" style="width: 100%; display: block; border-radius: 8px;">
+        </div>
+        <div class="feature-desc">
+          <div class="card" style="margin-bottom:0;">
+            <div class="card-title">📁 Backup, Reset & Estilo Visual</div>
+            <ul>
+              <li><b>Backup:</b> Permite exportar ou importar todas as configurações de rede e Telegram em formato JSON para restauração rápida.</li>
+              <li><b>Restauração:</b> Botão vermelho para restaurar todos os padrões originais de fábrica do aparelho.</li>
+              <li><b>Estilo Visual:</b> Seletor visual para alterar o tema de cores do portal local.</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+
+      <!-- TELA 3: ATUALIZAÇÕES -->
+      <h3 style="margin-top:40px;">3. Tela de Atualização (/update)</h3>
+      <p>Interface dedicada para a instalação de atualizações de melhorias de forma manual ou automática:</p>
+
+      <div class="feature-row">
+        <div class="feature-preview">
+          <img src="print_update.png" alt="Tela de Atualizações" style="width: 100%; display: block; border-radius: 8px;">
+        </div>
+        <div class="feature-desc">
+          <div class="card" style="margin-bottom:16px;">
+            <div class="card-title">📂 Enviar Arquivo Local (Manual)</div>
+            <p>Módulo para enviar e gravar novos firmwares manualmente através de arquivos compactados <code>.bin</code>:</p>
+            <ul>
+              <li><b>Seleção do Arquivo:</b> Escolha o arquivo de atualização compilado no computador.</li>
+              <li><b>Envio & Gravação:</b> Transmite o arquivo para o monitor com uma barra de progresso em tempo real.</li>
+              <li><b>Reboot automático:</b> Reinicia fisicamente o aparelho e testa a reconexão automática com contagem de 30 segundos.</li>
+            </ul>
+          </div>
+
+          <div class="card" style="margin-bottom:0;">
+            <div class="card-title">☁️ Atualização via Nuvem (Automática)</div>
+            <p>Método simplificado de um clique para buscar e instalar atualizações direto dos nossos servidores online:</p>
+            <ul>
+              <li><b>Busca automática:</b> Verifica novas versões com um clique.</li>
+              <li><b>Atualizar Agora:</b> Um botão verde destacado permite disparar o download imediato caso haja atualizações.</li>
+              <li><b>Instalação Segura:</b> Baixa, valida o arquivo, instala, reinicia e monitora a volta da rede com contagem de 60 segundos.</li>
+            </ul>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- ABA: EQUIPAMENTO -->
+    <section id="tab-equipamento" class="tab-content">
+      <h1>🔌 Guia do Equipamento</h1>
+      <p>Entenda o funcionamento físico do aparelho de monitoramento: seus botões, leds e avisos sonoros integrados.</p>
+
+      <div class="image-placeholder" data-key="foto_botao">
+        <img src="dispositivo_monitor.png" alt="Equipamento Físico">
+      </div>
+
+      <h2>🔘 Botões Físicos Integrados</h2>
+      <div class="card">
+        <div class="card-title">🎛️ Localizados na face frontal do aparelho (parte inferior):</div>
+        <ul>
+          <li><b>Reset Físico (Botão Esquerdo):</b> Reinicia o aparelho imediatamente se necessário.</li>
+          <li><b>Botão de Funções (Botão Direito):</b> Executa ações rápidas:
+            <ul>
+              <li><b>1 Clique Curto:</b> Envia o relatório de status resumido atual imediatamente para o Telegram.</li>
+              <li><b>2 Cliques Rápidos:</b> Roda um teste de conexão completo na hora e envia os detalhes no Telegram.</li>
+              <li><b>Pressionar por 5 segundos:</b> Restaura as configurações originais de fábrica (Reset de Fábrica), apagando todas as definições salvas.</li>
+            </ul>
+          </li>
+        </ul>
+      </div>
+
+      <h2>💡 Leds de Status (Luz de Sinalização)</h2>
+      <p>O aparelho conta com uma luz azul indicativa do estado da sua conexão de internet:</p>
+      <table>
+        <thead>
+          <tr>
+            <th>Comportamento da Luz</th>
+            <th>Significado Operacional</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr>
+            <td><b>Apagado</b></td>
+            <td>Tudo OK. Todos os links de internet monitorados estão funcionando perfeitamente.</td>
+          </tr>
+          <tr>
+            <td><b>Piscando Devagar</b></td>
+            <td>Alerta parcial. Pelo menos uma das conexões monitoradas caiu ou está offline.</td>
+          </tr>
+          <tr>
+            <td><b>Piscando Rápido</b></td>
+            <td>Queda geral. Todas as conexões de internet configuradas caíram simultaneamente.</td>
+          </tr>
+        </tbody>
+      </table>
+
+      <h2 style="margin-top:32px;">🔊 Avisos Sonoros (Bipes do Aparelho)</h2>
+      <p>O aparelho emite avisos sonoros curtos e não obstrutivos para confirmar comandos ou alertar sobre blackouts de rede:</p>
+      <ul>
+        <li><b>2 Bipes Curtos:</b> Emitidos ao ligar o aparelho para confirmar que ele iniciou e conectou ao sinal Wi-Fi com sucesso.</li>
+        <li><b>1 Bipe Médio:</b> Emitido para confirmar o clique no Botão de Funções.</li>
+        <li><b>3 Bipes Médios:</b> Alerta sonoro indicando que ocorreu uma queda total de internet.</li>
+        <li><b>1 Bipe Longo:</b> Emitido para confirmar que o aparelho realizou a <b>Restauração de Fábrica</b> com sucesso.</li>
+      </ul>
+      <p><i>Nota: O sinalizador sonoro é desativado automaticamente no período de silêncio configurado nas opções (ex: no período noturno) para evitar incômodos.</i></p>
+    </section>
+
+    <!-- ABA: TELEGRAM -->
+    <section id="tab-telegram" class="tab-content">
+      <h1>🤖 Notificações e Alertas do Telegram</h1>
+      <p>Abaixo estão descritos todos os tipos de alertas e relatórios automatizados enviados pelo Bot do Telegram para mantê-lo informado sobre a estabilidade da sua rede:</p>
+
+      <div class="card">
+        <div class="card-title">🚨 1. Alerta de Queda de Conexão (Link Offline)</div>
+        <p>Disparado na hora em que o monitor detecta que um link de internet caiu por completo. O alerta traz o nome da operadora e o horário exato da queda.</p>
+      </div>
+
+      <div class="card">
+        <div class="card-title">✅ 2. Alerta de Retorno de Conexão (Link Online)</div>
+        <p>Enviado assim que a conexão de internet é restabelecida e volta a ficar estável. Ele mostra o tempo total (em minutos e segundos) em que a rede ficou fora do ar.</p>
+      </div>
+
+      <div class="card">
+        <div class="card-title">⚠️ 3. Alerta de Instabilidade/Oscilação</div>
+        <p>Emitido caso a conexão com a operadora comece a falhar parcialmente (como perda rápida de dados ou atraso excessivo), indicando lentidão na navegação sem que a internet caia de vez.</p>
+      </div>
+
+      <div class="card">
+        <div class="card-title">🔌 4. Alerta de Queda de Dispositivo Local</div>
+        <p>Se você cadastrou algum aparelho interno (como um computador de escritório, impressora ou câmera) para ser monitorado e ele parar de responder na rede, o bot envia uma mensagem informando a perda de conexão deste aparelho específico.</p>
+      </div>
+
+      <div class="card">
+        <div class="card-title">📦 5. Notificação de Nova Versão Disponível</div>
+        <p>Enviado automaticamente se o aparelho detectar que a equipe de desenvolvimento disponibilizou uma nova atualização de sistema para download.</p>
+      </div>
+
+      <div class="card">
+        <div class="card-title">📊 6. Relatório Resumido de Desempenho</div>
+        <p>Enviado de forma programada ou ao pressionar o botão de funções. Exibe a latência média (Ping) acumulada de cada operadora no dia, além do tempo total offline e taxa de estabilidade de cada link.</p>
+      </div>
+    </section>
+
+    <!-- ABA: CONFIGURAÇÃO -->
+    <section id="tab-config" class="tab-content">
+      <h1>⚙️ Configuração Passo a Passo</h1>
+      <p>Siga os procedimentos abaixo para conectar o monitor à sua rede local e ativar os alertas no seu celular:</p>
+
+      <h2>🚀 Primeira Inicialização (Configuração de Wi-Fi)</h2>
+      <div class="card">
+        <p>Ao ligar o monitor pela primeira vez (ou se ele perder a conexão com a rede Wi-Fi configurada anteriormente):</p>
+        <ol>
+          <li>O aparelho emitirá bipes e a luz azul indicará que o portal de configuração está pronto.</li>
+          <li>Ele criará uma rede Wi-Fi própria e temporária com as seguintes credenciais:
+            <br>• Nome da Rede (SSID): <b>MonitorAP</b>
+            <br>• Senha: <b>12345678</b>
+          </li>
+          <li>No seu celular ou computador, abra a lista de redes Wi-Fi, conecte-se na rede <b>MonitorAP</b> e digite a senha <b>12345678</b>.</li>
+          <li>Após conectar, o seu navegador deverá abrir a tela de configuração automaticamente. Caso não abra, abra o navegador e digite o endereço: <code>192.168.4.1</code></li>
+        </ol>
+      </div>
+
+      <h2>📶 Como Conectar o Monitor à sua Rede Wi-Fi Local</h2>
+      <div class="card">
+        <img src="quadro_config_wifi.png" alt="Configuração de Wi-Fi" style="max-width: 100%; display: block; border-radius: 8px; margin-bottom: 16px; border: 1px solid var(--border);">
+        <p>Estando conectado na rede temporária do monitor:</p>
+        <ol>
+          <li>O portal mostrará o quadro <b>Rede Wi-Fi</b> (conforme a imagem acima).</li>
+          <li>No campo <b>SSID (Nome da Rede)</b>, digite o nome exato da rede Wi-Fi da sua casa ou empresa.</li>
+          <li>No campo <b>Senha WiFi</b>, digite a respectiva senha da sua rede de internet.</li>
+          <li>Preencha as demais configurações da página (como as operadoras e o Telegram) e clique no botão azul <b>Salvar Todas as Configurações</b>.</li>
+          <li>O aparelho reiniciará, emitirá dois bipes curtos de sucesso, se conectará à sua internet local e desativará a rede temporária <b>MonitorAP</b>.</li>
+        </ol>
+      </div>
+
+      <h2>🤖 2. Como Configurar o Bot do Telegram</h2>
+      <div class="card">
+        <img src="quadro_config_telegram_adafruit.png" alt="Configuração do Telegram" style="max-width: 100%; display: block; border-radius: 8px; margin-bottom: 16px; border: 1px solid var(--border);">
+        <div style="background: rgba(255, 23, 68, 0.08); border-left: 4px solid var(--c-ruim); padding: 12px; border-radius: 4px; margin-top: 12px; font-size: 0.9rem; color: var(--text); line-height: 1.5; margin-bottom: 16px;">
+          <b>⚠️ Cuidado com Bots Falsos:</b> Ao pesquisar pelo <b>@BotFather</b> no Telegram, certifique-se de selecionar o contato que possui o <b>selo azul de verificação</b> oficial ao lado do nome. Existem muitos canais e bots falsos com nomes e fotos idênticas criados por golpistas para tentar capturar os tokens e as chaves de acesso dos usuários.
+        </div>
+        <p>Para criar o seu bot gratuito e obter as credenciais para colocar no painel do aparelho:</p>
+        <ol>
+          <li>Abra o Telegram e pesquise pelo contato oficial do <b>@BotFather</b> (certifique-se de que possui o selo azul de verificação).</li>
+          <li>Abra a conversa e clique em Iniciar ou envie o comando <code>/newbot</code>.</li>
+          <li>Dê um nome para o seu bot (ex: <i>Meu Monitor de Rede</i>) e depois escolha um nome de usuário único terminado com a palavra "bot" (ex: <i>meu_monitor_exemplo_bot</i>).</li>
+          <li>O BotFather enviará uma mensagem contendo o seu <b>Token de Acesso</b> (um código longo misturando letras e números). Copie este código e cole no campo <b>Token do Bot</b> na tela de configurações do monitor.</li>
+          <li>Para obter o seu <b>Chat ID</b>: Pesquise no Telegram pelo contato <b>@userinfobot</b> e envie qualquer mensagem. Ele responderá com o seu ID numérico. Copie este número e cole no campo <b>Chat ID</b> do configurador do monitor.</li>
+          <li>Abra uma conversa com o seu próprio bot do monitor e envie um comando `/start` para permitir que ele fale com você.</li>
+        </ol>
+      </div>
+
+      <h2>☁️ 3. Como Configurar a Nuvem do Adafruit IO</h2>
+      <div class="card">
+        <img src="quadro_config_telegram_adafruit.png" alt="Configuração do Adafruit IO" style="max-width: 100%; display: block; border-radius: 8px; margin-bottom: 16px; border: 1px solid var(--border);">
+        <p>O monitor suporta envio automático de dados de estabilidade para geração de gráficos históricos na plataforma Adafruit IO:</p>
+        <ol>
+          <li>Crie uma conta gratuita no site <a href="https://io.adafruit.com/" target="_blank" style="color:var(--primary);text-decoration:none;font-weight:bold;">io.adafruit.com</a>.</li>
+          <li>Acesse a sua chave de autenticação clicando em "My Key" no painel da Adafruit e copie o nome de usuário e a chave API fornecidos.</li>
+          <li>No portal de configurações do monitor, ative a chave <b>Adafruit IO</b> e preencha as credenciais. Os dados de estabilidade de ping e quedas de cada operadora serão enviados automaticamente a cada teste.</li>
+        </ol>
+      </div>
+    </section>
+
+    <!-- ABA: CRIAR BOT TELEGRAM -->
+    <section id="tab-criar-bot" class="tab-content">
+      <h1>🤖 Criar Bot no Telegram</h1>
+      <p>O monitor utiliza um robô (bot) do Telegram para enviar alertas de quedas e relatórios direto para o seu celular de forma 100% gratuita. Siga o passo a passo abaixo para criar o seu:</p>
+
+      <div class="card">
+        <div class="card-title">1️⃣ Criando o Bot com o BotFather</div>
+        <p>O <b>BotFather</b> (Pai dos Bots) é o contato oficial do Telegram para criação e gerenciamento de robôs.</p>
+        
+        <div style="background: rgba(255, 23, 68, 0.08); border-left: 4px solid var(--c-ruim); padding: 12px; border-radius: 4px; margin-top: 12px; font-size: 0.9rem; color: var(--text); line-height: 1.5; margin-bottom: 16px;">
+          <b>⚠️ Cuidado com Bots Falsos:</b> Ao pesquisar pelo <b>@BotFather</b> no Telegram, certifique-se de selecionar o contato que possui o <b>selo azul de verificação</b> oficial ao lado do nome. Existem muitos canais e bots falsos com nomes e fotos idênticas criados por golpistas para tentar capturar os tokens e as chaves de acesso dos usuários.
+        </div>
+
+        <ol>
+          <li>Abra o Telegram no seu celular ou computador.</li>
+          <li>Pesquise na barra de busca por <b>@BotFather</b> (selecione apenas o com o selo azul de verificação).</li>
+          <li>Inicie a conversa e clique em <b>Começar</b> (ou envie a mensagem <code>/start</code>).</li>
+          <li>Envie o comando <code>/newbot</code> para criar um novo robô.</li>
+          <li>Digite um nome de exibição para o seu robô (ex: <code>Monitor de Rede Residencial</code>).</li>
+          <li>Escolha um nome de usuário (username) para o robô. Este nome deve terminar obrigatoriamente com a palavra "bot" (ex: <code>monitor_casa_joao_bot</code>).</li>
+          <li>O BotFather responderá com uma mensagem contendo o seu <b>HTTP API Token</b> (um código longo parecido com: <code>1234567890:ABCdefGhIJKlmNoPQRsTUVwxyZ</code>). Copie este código e cole no configurador do monitor.</li>
+        </ol>
+
+        <div class="image-placeholder" data-key="telegram_botfather">
+          <img src="telegram_botfather.png" alt="Criação do Bot no Telegram com o @BotFather">
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-title">2️⃣ Obtendo o seu Chat ID</div>
+        <p>O <b>Chat ID</b> identifica a sua conversa pessoal que receberá as mensagens do robô.</p>
+        <ol>
+          <li>Pesquise no Telegram pelo contato <b>@userinfobot</b> e envie a mensagem <code>/start</code>.</li>
+          <li>Ele responderá com um número de ID (ex: <code>987654321</code>). Este número é o seu <b>Chat ID</b>. Copie e cole no configurador do monitor.</li>
+        </ol>
+
+        <div class="image-placeholder" data-key="telegram_userinfo">
+          <img src="telegram_userinfo.png" alt="Obtenção do Chat ID com o @userinfobot">
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="card-title">3️⃣ Ativando o Robô</div>
+        <p><b>IMPORTANTE:</b> O Telegram não permite que um robô envie mensagens para você sem a sua permissão inicial.</p>
+        <ol>
+          <li>Procure pelo nome de usuário (username) do seu robô no Telegram (aquele que você escolheu no passo 1).</li>
+          <li>Inicie a conversa com ele e envie a mensagem <b><code>/start</code></b>.</li>
+          <li>Pronto! Agora o robô está ativo e autorizado a enviar os alertas e relatórios do monitor para você.</li>
+        </ol>
+      </div>
+    </section>
+
+    <!-- ABA: ROTEAMENTO ER605 -->
+    <section id="tab-roteamento" class="tab-content">
+      <h1>🔀 Roteamento de Links (TP-Link ER605)</h1>
+      <p>Para que o monitor identifique a queda individual de cada internet, cada operadora deve ser testada usando um IP diferente. Configure o roteador de carga (Load Balance) <b>TP-Link ER605</b> para direcionar os testes de ping pelas saídas corretas:</p>
+
+      <div class="card">
+        <div class="card-title">🎯 Regras de Direcionamento Necessárias</div>
+        <p>Configure as seguintes regras de roteamento de política (Policy Routing) no seu roteador:</p>
+        <table style="width:100%; border-collapse: collapse; margin-top: 12px; font-size: 0.95rem; text-align: left;">
+          <thead>
+            <tr style="border-bottom: 2px solid var(--border); color: #fff;">
+              <th style="padding: 10px 5px;">IP de Destino</th>
+              <th style="padding: 10px 5px;">Link de Saída</th>
+              <th style="padding: 10px 5px;">Descrição</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr style="border-bottom: 1px solid var(--border);">
+              <td style="padding: 10px 5px; color: var(--primary); font-weight: bold;">8.8.8.8</td>
+              <td style="padding: 10px 5px; color: #fff;">WAN 1 (Principal)</td>
+              <td style="padding: 10px 5px;">Testa o Link 1 (ex: Vivo)</td>
+            </tr>
+            <tr style="border-bottom: 1px solid var(--border);">
+              <td style="padding: 10px 5px; color: var(--primary); font-weight: bold;">8.8.4.4</td>
+              <td style="padding: 10px 5px; color: #fff;">WAN 2 (Secundário)</td>
+              <td style="padding: 10px 5px;">Testa o Link 2 (ex: Tim)</td>
+            </tr>
+            <tr style="border-bottom: 1px solid var(--border);">
+              <td style="padding: 10px 5px; color: var(--primary); font-weight: bold;">1.1.1.1</td>
+              <td style="padding: 10px 5px; color: #fff;">WAN 3 (Terciário)</td>
+              <td style="padding: 10px 5px;">Testa o Link 3 (Se ativo)</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="card">
+        <div class="card-title">💻 Passo a Passo no TP-Link ER605 (Modo Standalone)</div>
+        <p>No TP-Link ER605, as regras de roteamento de política não aceitam a digitação direta de endereços IP. Por isso, você deve primeiro registrar os IPs e grupos de destino. Siga as duas etapas abaixo:</p>
+        
+        <h3 style="margin-top:20px; font-size:1.15rem; color:#fff;">Etapa 1: Cadastrar os IPs e Grupos de Destino</h3>
+        <ol>
+          <li>Acesse a tela de administração do seu roteador TP-Link ER605 (geralmente pelo endereço IP <code>192.168.0.1</code>) e insira usuário e senha.</li>
+          <li>No menu esquerdo, acesse <b>Preferences</b> &gt; <b>IP Group</b> &gt; <b>IP Address</b>.</li>
+          <li>Clique no botão <b>+ Add</b> para cadastrar o primeiro IP de teste:
+            <ul>
+              <li><b>Name:</b> <code>IP_Dest_Link1</code></li>
+              <li><b>IP Address Type:</b> Selecione <code>IP Address Range</code></li>
+              <li><b>IP Address Range:</b> Digite <code>8.8.8.8 - 8.8.8.8</code></li>
+              <li>Clique em <b>OK</b>.</li>
+            </ul>
+          </li>
+          <li>Clique no botão <b>+ Add</b> para cadastrar o segundo IP de teste:
+            <ul>
+              <li><b>Name:</b> <code>IP_Dest_Link2</code></li>
+              <li><b>IP Address Type:</b> Selecione <code>IP Address Range</code></li>
+              <li><b>IP Address Range:</b> Digite <code>8.8.4.4 - 8.8.4.4</code></li>
+              <li>Clique em <b>OK</b>.</li>
+            </ul>
+          </li>
+          <li>Clique no botão <b>+ Add</b> para cadastrar o terceiro IP de teste:
+            <ul>
+              <li><b>Name:</b> <code>IP_Dest_Link3</code></li>
+              <li><b>IP Address Type:</b> Selecione <code>IP Address Range</code></li>
+              <li><b>IP Address Range:</b> Digite <code>1.1.1.1 - 1.1.1.1</code></li>
+              <li>Clique em <b>OK</b>.</li>
+            </ul>
+          </li>
+        </ol>
+
+        <div class="image-placeholder" data-key="er605_ip_address">
+          <img src="er605_ip_address.png" alt="Tela IP Address do ER605">
+        </div>
+
+        <ol start="6">
+          <li>No menu superior ou lateral, acesse a aba <b>IP Group</b> (dentro de <b>Preferences</b> &gt; <b>IP Group</b>).</li>
+          <li>Clique em <b>+ Add</b> para criar o grupo do primeiro link:
+            <ul>
+              <li><b>Name:</b> <code>Grupo_Dest_Link1</code></li>
+              <li><b>Address Name:</b> Selecione na lista o cadastrado anteriormente: <code>IP_Dest_Link1</code></li>
+              <li>Clique em <b>OK</b>.</li>
+            </ul>
+          </li>
+          <li>Clique em <b>+ Add</b> para criar o grupo do segundo link:
+            <ul>
+              <li><b>Name:</b> <code>Grupo_Dest_Link2</code></li>
+              <li><b>Address Name:</b> Selecione na lista: <code>IP_Dest_Link2</code></li>
+              <li>Clique em <b>OK</b>.</li>
+            </ul>
+          </li>
+          <li>Clique em <b>+ Add</b> para criar o grupo do terceiro link:
+            <ul>
+              <li><b>Name:</b> <code>Grupo_Dest_Link3</code></li>
+              <li><b>Address Name:</b> Selecione na lista: <code>IP_Dest_Link3</code></li>
+              <li>Clique em <b>OK</b>.</li>
+            </ul>
+          </li>
+        </ol>
+
+        <div class="image-placeholder" data-key="er605_ip_group">
+          <img src="er605_ip_group.png" alt="Tela IP Group do ER605">
+        </div>
+
+        <h3 style="margin-top:24px; font-size:1.15rem; color:#fff;">Etapa 2: Configurar o Roteamento de Política (Policy Routing)</h3>
+        <ol>
+          <li>No menu esquerdo, acesse: <b>Transmission</b> &gt; <b>Routing</b> &gt; <b>Policy Routing</b>.</li>
+          <li>Clique no botão <b>+ Add</b> para criar a regra do primeiro link (Link 1 - ex: Vivo):
+            <ul>
+              <li><b>Name:</b> <code>Rota_Link_1</code></li>
+              <li><b>Source IP:</b> Selecione <code>IPGROUP_ANY</code></li>
+              <li><b>Destination IP:</b> Selecione o grupo correspondente: <code>Grupo_Dest_Link1</code> (que contém o IP 8.8.8.8)</li>
+              <li><b>WAN:</b> Escolha a porta física da sua primeira operadora: <code>WAN</code> (ou <code>WAN1</code>)</li>
+              <li><b>Status:</b> Marque como <code>Enable</code></li>
+              <li>Clique em <b>OK</b>.</li>
+            </ul>
+          </li>
+          <li>Clique no botão <b>+ Add</b> para criar a regra do segundo link (Link 2 - ex: Tim):
+            <ul>
+              <li><b>Name:</b> <code>Rota_Link_2</code></li>
+              <li><b>Source IP:</b> Selecione <code>IPGROUP_ANY</code></li>
+              <li><b>Destination IP:</b> Selecione o grupo correspondente: <code>Grupo_Dest_Link2</code> (que contém o IP 8.8.4.4)</li>
+              <li><b>WAN:</b> Escolha a porta física da sua segunda operadora: <code>WAN/LAN1</code> (ou <code>WAN2</code>)</li>
+              <li><b>Status:</b> Marque como <code>Enable</code></li>
+              <li>Clique em <b>OK</b>.</li>
+            </ul>
+          </li>
+          <li>Clique no botão <b>+ Add</b> para criar a regra do terceiro link (Link 3):
+            <ul>
+              <li><b>Name:</b> <code>Rota_Link_3</code></li>
+              <li><b>Source IP:</b> Selecione <code>IPGROUP_ANY</code></li>
+              <li><b>Destination IP:</b> Selecione o grupo correspondente: <code>Grupo_Dest_Link3</code> (que contém o IP 1.1.1.1)</li>
+              <li><b>WAN:</b> Escolha a porta física da sua terceira operadora: <code>WAN/LAN2</code> (ou <code>WAN3</code>)</li>
+              <li><b>Status:</b> Marque como <code>Enable</code></li>
+              <li>Clique em <b>OK</b>.</li>
+            </ul>
+          </li>
+        </ol>
+
+        <div class="image-placeholder" data-key="er605_policy_routing">
+          <img src="er605_policy_routing.png" alt="Tela Policy Routing do ER605">
+        </div>
+        
+        <div style="background: rgba(255, 234, 0, 0.05); border-left: 4px solid var(--c-regular); padding: 12px; border-radius: 4px; margin-top: 16px; font-size: 0.9rem; color: var(--text-muted); line-height: 1.5;">
+          <b>⚠️ Importante:</b> No TP-Link ER605, as regras de roteamento de política não aceitam a digitação direta de endereços IP. É obrigatório criar o <b>IP Address</b> e o <b>IP Group</b> primeiro nas preferências do aparelho para que a regra funcione adequadamente.
+        </div>
+      </div>
+    </section>
+
+  </main>
+
+  <script>
+    // Função para alterar abas
+    function showTab(tabId) {
+      document.querySelectorAll('.tab-content').forEach(tab => {
+        tab.classList.remove('active');
+      });
+      document.querySelectorAll('.menu-item').forEach(item => {
+        item.classList.remove('active');
+      });
+      
+      const targetTab = document.getElementById('tab-' + tabId);
+      if (targetTab) {
+        targetTab.classList.add('active');
+      }
+      
+      const menuItems = Array.from(document.querySelectorAll('.menu-item'));
+      const activeItem = menuItems.find(item => item.getAttribute('onclick').includes(tabId));
+      if (activeItem) {
+        activeItem.classList.add('active');
+      }
+
+      // Rola para o topo ao trocar de aba
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    // As imagens estão salvas diretamente no diretório do projeto e são carregadas de forma estática e legível.
+  </script>
+</body>
+</html>
