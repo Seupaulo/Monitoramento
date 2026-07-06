@@ -684,6 +684,29 @@
           <li>Preencha as demais configurações da página (como as operadoras e o Telegram) e clique no botão azul <b>Salvar Todas as Configurações</b>.</li>
           <li>O aparelho reiniciará, emitirá dois bipes curtos de sucesso, se conectará à sua internet local e desativará a rede temporária <b>MonitorAP</b>.</li>
         </ol>
+
+        <div style="background: rgba(59, 130, 246, 0.05); border: 1px solid var(--primary); border-radius: 8px; padding: 16px; margin-top: 16px; line-height: 1.6;">
+          <h3 style="color: var(--primary); font-size: 1.1rem; margin-top: 0; margin-bottom: 8px; display: flex; align-items: center; gap: 8px;">🚀 Otimização de Performance e Acesso (Recomendado)</h3>
+          <p style="margin-bottom: 12px; font-size: 0.95rem; color: var(--text);">Para garantir que os testes de ping/jitter tragam os resultados mais reais possíveis e que você nunca perca o acesso ao portal local, siga estas recomendações no painel do seu roteador Wi-Fi principal:</p>
+          <ul style="margin-bottom: 0; margin-left: 20px; font-size: 0.9rem; color: var(--text-muted);">
+            <li><b>Identificar o IP do Monitor (DHCP):</b> Ao se conectar no seu Wi-Fi local, o monitor receberá um IP automático (ex: <code>192.168.1.150</code>). Você pode descobrir esse IP consultando a lista de clientes conectados no aplicativo oficial do seu próprio roteador, no aplicativo <i>Fing</i> no celular ou em outros programas de varredura. O dispositivo aparecerá na rede identificado com o nome <b>Monitor-Links</b>. Localize-o e utilize o endereço IP dele para acessar o portal.</li>
+            <li><b>Reserva de IP (DHCP Static Lease):</b> Configure uma reserva de IP vinculada ao endereço MAC do monitor nas preferências de DHCP do seu roteador. Isso garante que o monitor mantenha sempre o mesmo endereço de acesso.</li>
+            <li><b>Desativar Rede Mesh para o Monitor:</b> Se você utiliza roteadores Mesh em casa ou na empresa, configure o roteador principal para desativar a função de roaming Mesh/Fast Roaming especificamente para o MAC/IP do monitor. Isso previne oscilações e quedas de conexão quando o chip tenta alternar entre antenas de forma desnecessária.</li>
+            <li><b>Priorização de Rede (QoS):</b> Configure o monitor como um dispositivo de <b>Alta Prioridade</b> nas configurações de QoS (Quality of Service) do seu roteador. Isso evita que o ping/jitter do monitor sofra oscilações falsas causadas pelo tráfego de outros computadores (como downloads pesados ou streamings ocorrendo simultaneamente).</li>
+          </ul>
+        </div>
+      </div>
+
+      <h2>🔐 Acesso Restrito (Login e Senha do Portal)</h2>
+      <div class="card">
+        <p>Para proteger o monitor de acessos não autorizados por outras pessoas conectadas na sua rede local, as páginas de <b>Configurações</b> (<code>/config</code>) e de <b>Atualizações</b> (<code>/update</code>) exigem autenticação:</p>
+        <ul>
+          <li><b>Usuário de Acesso:</b> <code>admin</code></li>
+          <li><b>Senha de Acesso:</b> A mesma <b>Senha do Wi-Fi</b> que você cadastrou no monitor para ele se conectar à sua internet local.</li>
+        </ul>
+        <div style="background: rgba(59, 130, 246, 0.08); border-left: 4px solid var(--primary); padding: 12px; border-radius: 4px; margin-top: 12px; font-size: 0.9rem; color: var(--text); line-height: 1.5;">
+          💡 <b>Dica:</b> Caso você mude a senha do seu roteador Wi-Fi ou se esqueça dela, será necessário efetuar o <b>Reset de Fábrica</b> (pressionando o botão físico direito do monitor por 5 segundos) para restaurar os padrões de fábrica do chip e conseguir o acesso novamente.
+        </div>
       </div>
 
       <h2>🤖 2. Como Configurar o Bot do Telegram</h2>
